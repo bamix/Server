@@ -13,6 +13,7 @@ namespace WebSocketChat.Controllers
 
         public ActionResult Index()
         {
+            
             return View();
         }
 

@@ -9,24 +9,29 @@ namespace WebSocketChat.Controllers
 {
     public class MicrosoftWebSockets : WebSocketHandler
     {
-        private static WebSocketCollection clients = new WebSocketCollection();
-        private string name;
-
+        //private static WebSocketCollection clients = new WebSocketCollection();
+        private static List<MicrosoftWebSockets> clients= new List<MicrosoftWebSockets>();
+       
         public override void OnOpen()
         {           
-            clients.Add(this);
-            clients.Broadcast("connected");
+            clients.Add(this);         
+            
         }
 
         public override void OnMessage(string message)
         {
-            clients.Broadcast( message);
+           
+            if (!message.Contains("keep active"))
+            {
+                var list = clients.Where(c => c.WebSocketContext.WebSocket != this.WebSocketContext.WebSocket);
+                foreach (MicrosoftWebSockets socket in list)
+                    socket.Send(message);
+            }
         }
 
         public override void OnClose()
         {
-            clients.Remove(this);
-            clients.Broadcast(string.Format("{0} has gone away.", name));
+            clients.Remove(this);            
         }
 
     }

@@ -16,11 +16,17 @@
             $user = document.getElementById('user'),
             $messages = document.getElementById('messages');
 
-        if (typeof (WebSocket) !== 'undefined') {
+        if (typeof (WebSocket) !== 'undefined') {           
             socket = new WebSocket("ws://bamixsocket.azurewebsites.net/Controllers/Handler2.ashx");
         } else {
             socket = new MozWebSocket("ws://bamixsocket.azurewebsites.net/Controllers/Handler2.ashx");
         }
+
+        function func() {
+            socket.send("keep active");
+        }
+
+        setInterval(func, 5000);
 
         socket.onmessage = function (msg) {
             var $el = document.createElement('p');
